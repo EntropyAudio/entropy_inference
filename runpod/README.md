@@ -1,5 +1,5 @@
 ```angular2html
-python src/handler.py
+python -m runpod.src.handler
 ```
 
 ```angular2html

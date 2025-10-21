@@ -1,5 +1,5 @@
-import utils.constants as c
-from utils.exceptions import InvalidPromptError
+from .utils import constants as c
+from .utils.exceptions import InvalidPromptError
 import logging
 
 logger = logging.getLogger(c.LOGGER_NAME)
