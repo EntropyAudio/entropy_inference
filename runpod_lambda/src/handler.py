@@ -16,7 +16,7 @@ def handler(event):
     logger = setup_logger()
     logger.info(f"Received event: {event}")
     input = extract_input(event)
-    result = run_inference(input, diffusion_trainer)
+    result = run_inference(cfg, input, diffusion_trainer)
     return result
 
 if __name__ == '__main__':
