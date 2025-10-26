@@ -4,7 +4,7 @@ from .converter import extract_input
 from .controller import run_inference
 from .utils.utils import setup_logger
 import entropy_training
-from entropy_training.trainers.diffusion_trainer import DiffusionTrainer
+from entropy_training.src.trainers.diffusion_trainer import DiffusionTrainer
 # from entropy_training.utils.utils import environment_setup
 from omegaconf import OmegaConf
 

@@ -1,11 +1,8 @@
 import logging
-import os
 import torch
-import torchaudio
 from einops import rearrange
-
-from entropy_data.dataset.audio_utils import trim_silence
-from entropy_data.dataset.models import AudioConditioning
+from entropy_data.src.dataset.audio_utils import trim_silence
+from entropy_data.src.dataset.models import AudioConditioning
 from .utils import constants as c
 
 logger = logging.getLogger(c.LOGGER_NAME)
