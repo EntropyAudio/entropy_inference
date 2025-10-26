@@ -10,7 +10,10 @@ from omegaconf import OmegaConf
 
 cfg = OmegaConf.load(Path(entropy_training.__file__).parent / "config.yaml")
 # environment_setup(cfg)
-model = get_model(cfg, download_pretrained_weights=False).to(cfg.environment.device).eval()
+model = get_model(cfg, download_pretrained_weights=False).to(cfg.environment.device)
+model.pretransform.eval()
+model.conditioner.eval()
+model.eval()
 
 def handler(event):
     logger = setup_logger()
