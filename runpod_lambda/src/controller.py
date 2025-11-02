@@ -12,24 +12,29 @@ logger = logging.getLogger(c.LOGGER_NAME)
 def run_inference(cfg, input, model):
     logger.info("Running inference...")
 
-    with torch.inference_mode() and torch.autocast(device_type=cfg.environment.device, dtype=eval(cfg.training.dtype)):
+    with torch.inference_mode() and torch.autocast(device_type=cfg.environment.device, dtype=torch.float32):
         output = model.generate(
-            steps=100,
-            cfg_scale=7.0,
-            conditioning=[AudioConditioning(cfg=cfg, inference=True, description=input["prompt"])],
+            steps=140,
+            cfg_scale=6.0,
+            conditioning=[AudioConditioning(cfg=cfg, inference=True, description=input["prompt"], key=None, bpm=None, loop=None)],
             latent_size=cfg.audio.latent_size,
             sigma_min=0.3,
             sigma_max=500,
-            sampler_type="dpmpp-3m-sde",
+            rho=1.0,
+            # sampler_type="dpmpp-3m-sde",
+            sampler_type="dpmpp-2m-sde",
+            # sampler_type="dpmpp-2m",
+            # sampler_type="k-dpmpp-2s-ancestral",
         )
 
         output = rearrange(output, "b d n -> d (b n)")
-        output = output.to(torch.float32).div(torch.max(torch.abs(output))).clamp(-1, 1).mul(32767).to(torch.int16).cpu()
+        max_val = torch.max(torch.abs(output)) + 1e-7
+        output = output.to(torch.float32).div(max_val).clamp(-1, 1).mul(32767).to(torch.int16).cpu()
         output = trim_silence(output)
-        return output.tolist()
 
-        # filename = f"{input['prompt']}.wav"
-        # save_dir = f"./{cfg.demo.path}"
-        # full_path = f"./{cfg.demo.path}/{filename}"
-        # os.makedirs(save_dir, exist_ok=True)
-        # torchaudio.save(full_path, output, cfg.audio.sample_rate)
+        # return output.tolist()
+        filename = f"{input['prompt']}.wav"
+        save_dir = f"./{cfg.demo.path}"
+        full_path = f"./{cfg.demo.path}/{filename}"
+        os.makedirs(save_dir, exist_ok=True)
+        torchaudio.save(full_path, output, cfg.audio.sample_rate)

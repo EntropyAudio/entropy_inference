@@ -1,4 +1,4 @@
-FROM pytorch/pytorch:2.9.0-cuda12.8-cudnn9-runtime
+FROM pytorch/pytorch:2.8.0-cuda12.8-cudnn9-runtime
 
 WORKDIR /
 
@@ -15,6 +15,6 @@ RUN pip install -e ./entropy_metrics/
 RUN pip install -e ./entropy_stable_audio_open/
 RUN pip install -e ./entropy_training/
 
-RUN pip install transformers bitsandbytes accelerate einops julius omegaconf k_diffusion
+RUN pip install flash-attn --no-build-isolation transformers bitsandbytes accelerate einops julius omegaconf k_diffusion
 
 CMD ["python", "-m", "runpod_lambda.src.handler"]
