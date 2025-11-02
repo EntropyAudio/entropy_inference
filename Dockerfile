@@ -4,7 +4,7 @@ WORKDIR /
 
 RUN pip install --no-cache-dir runpod
 
-COPY runpod_lambda/ ./runpod_lambda/
+COPY src/ ./src/
 COPY entropy_data/ ./entropy_data/
 COPY entropy_metrics/ ./entropy_metrics/
 COPY entropy_stable_audio_open/ ./entropy_stable_audio_open/
@@ -18,4 +18,4 @@ RUN pip install -e ./entropy_training/
 RUN pip install transformers bitsandbytes accelerate einops julius omegaconf k_diffusion
 RUN pip install flash-attn --no-build-isolation
 
-CMD ["python", "-m", "runpod_lambda.src.handler"]
+CMD ["python", "-m", "src.handler"]
