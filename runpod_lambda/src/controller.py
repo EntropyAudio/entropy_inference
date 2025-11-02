@@ -32,9 +32,9 @@ def run_inference(cfg, input, model):
         output = output.to(torch.float32).div(max_val).clamp(-1, 1).mul(32767).to(torch.int16).cpu()
         output = trim_silence(output)
 
-        # return output.tolist()
-        filename = f"{input['prompt']}.wav"
-        save_dir = f"./{cfg.demo.path}"
-        full_path = f"./{cfg.demo.path}/{filename}"
-        os.makedirs(save_dir, exist_ok=True)
-        torchaudio.save(full_path, output, cfg.audio.sample_rate)
+        return output.tolist()
+        # filename = f"{input['prompt']}.wav"
+        # save_dir = f"./{cfg.demo.path}"
+        # full_path = f"./{cfg.demo.path}/{filename}"
+        # os.makedirs(save_dir, exist_ok=True)
+        # torchaudio.save(full_path, output, cfg.audio.sample_rate)
