@@ -1,3 +1,4 @@
+import io
 import os
 import logging
 import torch
@@ -31,6 +32,16 @@ def run_inference(cfg, input, model):
         max_val = torch.max(torch.abs(output)) + 1e-7
         output = output.to(torch.float32).div(max_val).clamp(-1, 1).mul(32767).to(torch.int16).cpu()
         output = trim_silence(output)
+
+        buffer = io.BytesIO()
+        torchaudio.save(
+            buffer,
+            output,
+            cfg.audio.sample_rate,
+            format="wav"
+        )
+        buffer.seek(0)
+        return buffer.read()
 
         return output.tolist()
         # filename = f"{input['prompt']}.wav"
