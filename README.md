@@ -11,5 +11,9 @@ docker push entropyaudio/inference:latest
 ```
 
 ```angular2html
+docker run --rm -it --gpus all --platform linux/amd64 entropyaudio/inference 
+```
+
+```angular2html
 docker.io/entropyaudio/inference:latest
 ```

@@ -7,6 +7,7 @@ from einops import rearrange
 from entropy_data.src.dataset.audio_utils import trim_silence
 from entropy_data.src.dataset.models import AudioConditioning
 from .utils import constants as c
+import base64
 
 logger = logging.getLogger(c.LOGGER_NAME)
 
@@ -41,9 +42,8 @@ def run_inference(cfg, input, model):
             format="wav"
         )
         buffer.seek(0)
-        return buffer.read()
+        return base64.b64encode(buffer.read()).decode('utf-8')
 
-        return output.tolist()
         # filename = f"{input['prompt']}.wav"
         # save_dir = f"./{cfg.demo.path}"
         # full_path = f"./{cfg.demo.path}/{filename}"

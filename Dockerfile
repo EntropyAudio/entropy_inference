@@ -15,7 +15,7 @@ RUN pip install -e ./entropy_metrics/
 RUN pip install -e ./entropy_stable_audio_open/
 RUN pip install -e ./entropy_training/
 
-RUN pip install transformers bitsandbytes accelerate einops julius omegaconf k_diffusion
+RUN pip install transformers bitsandbytes accelerate einops julius omegaconf k_diffusion soundfile
 RUN pip install flash-attn --no-build-isolation
 
 CMD ["python", "-m", "src.handler"]
