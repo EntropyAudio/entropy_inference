@@ -27,9 +27,7 @@ def handler(event):
     input = extract_input(event)
 
     return {
-        "output": {
-            "audio_base64": run_inference(cfg, input, model)
-        }
+        "audio_base64": run_inference(cfg, input, model)
     }
 
 if __name__ == '__main__':
