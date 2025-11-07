@@ -25,9 +25,10 @@ def handler(event):
     logger = setup_logger()
     logger.info(f"Received event: {event}")
     input = extract_input(event)
-
+    output = run_inference(cfg, input, model)
+    print(len(output))
     return {
-        "audio_base64": run_inference(cfg, input, model)
+        "audio_base64": output
     }
 
 if __name__ == '__main__':

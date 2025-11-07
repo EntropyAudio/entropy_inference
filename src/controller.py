@@ -18,7 +18,9 @@ def run_inference(cfg, input, model):
         output = model.generate(
             steps=140,
             cfg_scale=6.0,
-            conditioning=[AudioConditioning(cfg=cfg, inference=True, description=input["prompt"], key=None, bpm=None, loop=None)],
+            conditioning=[
+                AudioConditioning(cfg=cfg, inference=True, description=input.get("prompt"), key=None, bpm=None, loop=None) for i in range(input.get("batch_size", 1))
+            ],
             latent_size=cfg.audio.latent_size,
             sigma_min=0.3,
             sigma_max=500,
@@ -29,23 +31,30 @@ def run_inference(cfg, input, model):
             # sampler_type="k-dpmpp-2s-ancestral",
         )
 
-        output = rearrange(output, "b d n -> d (b n)")
-        max_val = torch.max(torch.abs(output)) + 1e-7
-        output = output.to(torch.float32).div(max_val).clamp(-1, 1).mul(32767).to(torch.int16).cpu()
-        output = trim_silence(output)
+        max_vals = torch.max(torch.abs(output), dim=-1, keepdim=True)[0] + 1e-7
 
-        buffer = io.BytesIO()
-        torchaudio.save(
-            buffer,
-            output,
-            cfg.audio.sample_rate,
-            format="wav"
-        )
-        buffer.seek(0)
-        return base64.b64encode(buffer.read()).decode('utf-8')
+        output_batch = (output
+                        .div(max_vals)
+                        .clamp(-1, 1)
+                        .mul(32767)
+                        .round()
+                        .to(torch.int16)
+                        )
 
-        # filename = f"{input['prompt']}.wav"
-        # save_dir = f"./{cfg.demo.path}"
-        # full_path = f"./{cfg.demo.path}/{filename}"
-        # os.makedirs(save_dir, exist_ok=True)
-        # torchaudio.save(full_path, output, cfg.audio.sample_rate)
+        output = []
+        for single_audio_tensor in output_batch.cpu():
+            trimmed_audio = trim_silence(single_audio_tensor)
+
+            buffer = io.BytesIO()
+            torchaudio.save(
+                buffer,
+                trimmed_audio,
+                cfg.audio.sample_rate,
+                format="wav"
+            )
+            buffer.seek(0)
+
+            base64_audio = base64.b64encode(buffer.read()).decode('utf-8')
+            output.append(base64_audio)
+
+        return output
