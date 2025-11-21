@@ -24,11 +24,14 @@ model.eval()
 def handler(event):
     logger = setup_logger()
     logger.info(f"Received event: {event}")
-    input = extract_input(event)
-    output = run_inference(cfg, input, model)
-    print(len(output))
+
+    prompt, batch_size = extract_input(event)
+
+    output_list = run_inference(cfg, prompt, model, batch_size)
+
     return {
-        "audio_base64": output
+        "prompt": prompt,
+        "audio_base64": output_list
     }
 
 if __name__ == '__main__':

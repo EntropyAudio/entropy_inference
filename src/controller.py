@@ -11,7 +11,7 @@ import base64
 
 logger = logging.getLogger(c.LOGGER_NAME)
 
-def run_inference(cfg, input, model):
+def run_inference(cfg, prompt, batch_size, model):
     logger.info("Running inference...")
 
     with torch.inference_mode() and torch.autocast(device_type=cfg.environment.device, dtype=torch.float32):
@@ -19,7 +19,7 @@ def run_inference(cfg, input, model):
             steps=140,
             cfg_scale=6.0,
             conditioning=[
-                AudioConditioning(cfg=cfg, inference=True, description=input.get("prompt"), key=None, bpm=None, loop=None) for i in range(input.get("batch_size", 1))
+                AudioConditioning(cfg=cfg, inference=True, description=prompt, key=None, bpm=None, loop=None) for i in range(batch_size)
             ],
             latent_size=cfg.audio.latent_size,
             sigma_min=0.3,

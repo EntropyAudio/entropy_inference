@@ -11,8 +11,9 @@ def extract_input(event):
 
     input = event.get("input")
     prompt = input.get("prompt")
+    batch_size = input.get("batch_size")
 
     if not prompt or not isinstance(prompt, str) or prompt == "":
         raise InvalidPromptError(prompt=prompt)
 
-    return input
+    return prompt, batch_size
