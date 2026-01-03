@@ -1,6 +1,6 @@
 {
   "input": {
     "prompt": "DnB break beat",
-    "batch_size": 4
+    "batch_size": 8
   }
 }

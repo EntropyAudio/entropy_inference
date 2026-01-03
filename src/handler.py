@@ -8,14 +8,15 @@ import torch
 from entropy_stable_audio_open.stable_audio_open import get_model
 from entropy_training.src.utils.constants import CKPT_KEY_MODEL
 from entropy_training.src.utils.utils import print_environment_info, set_cudnn_benchmarking, set_backend_precision, \
-    adjust_ckpt_keys
+    adjust_ckpt_keys, set_python_recursion_limit
 from omegaconf import OmegaConf
 
-cfg = OmegaConf.load(Path(entropy_training.__file__).parent / "configs" / "training.yaml")
+cfg = OmegaConf.load(Path(entropy_training.__file__).parent / "configs" / "inference.yaml")
 
 print_environment_info()
 set_cudnn_benchmarking(cfg)
 set_backend_precision(cfg)
+set_python_recursion_limit()
 
 checkpoint = torch.load(Path(__file__).parent / "ckpt/checkpoint_1000.pth", map_location="cpu", weights_only=False)[CKPT_KEY_MODEL]
 checkpoint = adjust_ckpt_keys(
