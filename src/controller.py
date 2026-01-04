@@ -22,10 +22,10 @@ def run_inference(cfg, model, prompt, batch_size):
                 AudioConditioning(description=prompt, key=None, bpm=None, loop=None) for _ in range(batch_size)
             ],
             latent_size=cfg.audio.latent_size,
-            sigma_min=0.001,
+            sigma_min=0.002,
             sigma_max=1000,
             rho=2.0,
-            eta=0.6,
+            eta=0.2,
             sampler_type=SamplerType.DPMPP_3M_SDE,
         )
 
