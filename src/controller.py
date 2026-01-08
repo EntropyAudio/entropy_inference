@@ -39,25 +39,25 @@ def run_inference(cfg, model, prompt, batch_size):
             norm_audio = trimmed_audio / max_val
             final_audio = (norm_audio.clamp(-1, 1).mul(32767).round().to(torch.int16))
 
-            save_dir = "./outputs_2"
-            os.makedirs(save_dir, exist_ok=True)
-            file_path = os.path.join(save_dir, f"output_{idx}.wav")
-            torchaudio.save(
-                file_path,
-                final_audio,
-                cfg.audio.sample_rate,
-                format="wav"
-            )
-
-            # buffer = io.BytesIO()
+            # save_dir = "./outputs_2"
+            # os.makedirs(save_dir, exist_ok=True)
+            # file_path = os.path.join(save_dir, f"output_{idx}.wav")
             # torchaudio.save(
-            #     buffer,
+            #     file_path,
             #     final_audio,
             #     cfg.audio.sample_rate,
             #     format="wav"
             # )
-            # buffer.seek(0)
-            # base64_audio = base64.b64encode(buffer.read()).decode('utf-8')
-            # output_list.append(base64_audio)
+
+            buffer = io.BytesIO()
+            torchaudio.save(
+                buffer,
+                final_audio,
+                cfg.audio.sample_rate,
+                format="wav"
+            )
+            buffer.seek(0)
+            base64_audio = base64.b64encode(buffer.read()).decode('utf-8')
+            output_list.append(base64_audio)
 
         return output_list
