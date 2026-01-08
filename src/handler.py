@@ -18,7 +18,8 @@ set_cudnn_benchmarking(cfg)
 set_backend_precision(cfg)
 set_python_recursion_limit()
 
-checkpoint = torch.load(Path(__file__).parent / "ckpt/checkpoint_1000.pth", map_location="cpu", weights_only=False)[CKPT_KEY_MODEL]
+checkpoint = torch.load(Path(__file__).parent / "ckpt/checkpoint_1000_dpo_6.pth", map_location="cpu", weights_only=False)[CKPT_KEY_MODEL]
+# checkpoint = torch.load(Path(__file__).parent / "ckpt/checkpoint_1000.pth", map_location="cpu", weights_only=False)[CKPT_KEY_MODEL]
 checkpoint = adjust_ckpt_keys(
     checkpoint,
     ignore_keys= {

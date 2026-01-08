@@ -22,10 +22,10 @@ def run_inference(cfg, model, prompt, batch_size):
                 AudioConditioning(description=prompt, key=None, bpm=None, loop=None) for _ in range(batch_size)
             ],
             latent_size=cfg.audio.latent_size,
-            sigma_min=0.002,
+            sigma_min=0.001,
             sigma_max=1000,
-            rho=2.0,
-            eta=0.2,
+            rho=1.0,
+            eta=0.1,
             sampler_type=SamplerType.DPMPP_3M_SDE,
         )
 
@@ -39,25 +39,25 @@ def run_inference(cfg, model, prompt, batch_size):
             norm_audio = trimmed_audio / max_val
             final_audio = (norm_audio.clamp(-1, 1).mul(32767).round().to(torch.int16))
 
-            # save_dir = "./outputs"
-            # os.makedirs(save_dir, exist_ok=True)
-            # file_path = os.path.join(save_dir, f"output_{idx}.wav")
-            # torchaudio.save(
-            #     file_path,
-            #     final_audio,
-            #     cfg.audio.sample_rate,
-            #     format="wav"
-            # )
-
-            buffer = io.BytesIO()
+            save_dir = "./outputs_2"
+            os.makedirs(save_dir, exist_ok=True)
+            file_path = os.path.join(save_dir, f"output_{idx}.wav")
             torchaudio.save(
-                buffer,
+                file_path,
                 final_audio,
                 cfg.audio.sample_rate,
                 format="wav"
             )
-            buffer.seek(0)
-            base64_audio = base64.b64encode(buffer.read()).decode('utf-8')
-            output_list.append(base64_audio)
+
+            # buffer = io.BytesIO()
+            # torchaudio.save(
+            #     buffer,
+            #     final_audio,
+            #     cfg.audio.sample_rate,
+            #     format="wav"
+            # )
+            # buffer.seek(0)
+            # base64_audio = base64.b64encode(buffer.read()).decode('utf-8')
+            # output_list.append(base64_audio)
 
         return output_list
