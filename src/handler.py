@@ -38,6 +38,15 @@ model.to(cfg.environment.device)
 model.eval()
 
 def handler(event):
+    """
+    Runpod event handler/entrypoint.
+
+    Args:
+        event: The event input.
+
+    Returns:
+        The model output outputs.
+    """
     logger = setup_logger()
     logger.info(f"Received event: {event}")
 

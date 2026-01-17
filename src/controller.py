@@ -12,6 +12,18 @@ import base64
 logger = logging.getLogger(c.LOGGER_NAME)
 
 def run_inference(cfg, model, prompt, batch_size):
+    """
+    Runs sampling by calling model.generate() on our denoising diffusion model.
+
+    Args:
+        cfg: The model inference config.
+        model: The denoising model.
+        prompt: The prompt.
+        batch_size: The batch size.
+
+    Returns:
+        Base64 encoded audio sampled from the model.
+    """
     logger.info("Running inference...")
 
     with torch.inference_mode(), torch.autocast(device_type=str(cfg.environment.device), dtype=eval(cfg.training.dtype)):
